@@ -23,6 +23,11 @@ opts_chunk$set(warning=FALSE,message=FALSE)
 \{-1, 0, 1, 2\} \\
 \{2, 1, 0, -1\}
 \]
+```{r}
+-1:2
+
+(2:-1)
+```
 
 1.   Build the following vectors using `seq()`.
 
@@ -31,6 +36,14 @@ opts_chunk$set(warning=FALSE,message=FALSE)
 \{2, 4, 6, 8, 10, 12\} \\
 \{2, 3.5, 5, 6.5\}
 \]
+
+```{r}
+seq(-1, 2)
+seq(2, 12, 2)
+seq(2, 6.5, 1.5)
+
+```
+
 
 1.   Build the following vectors using `rep()`.
 
@@ -41,6 +54,15 @@ opts_chunk$set(warning=FALSE,message=FALSE)
 \{1, 2, 3, 1, 2, 3, 1\} \\
 \{1, 1, 2, 2, 3, 3, 1, 1, 2, 2, 3, 3, 1, 1, 2, 2, 3, 3\}
 \]
+
+```{r}
+rep(c(1,2,3), 3)
+c(rep(1,2), rep(2, 2), rep(3,2))
+rep(c(1,2,3), length.out = 7)
+rep(c(rep(1,2), rep(2, 2), rep(3,2)), 3)
+
+```
+
 
 * * *
 
@@ -83,6 +105,7 @@ clearly understand how the two vectors are related to the plot.
 1.   If you now draw the next set of vectors:
 
 ```{r}
+p1y[p1x >= 50] <- p1y[p1x >= 50] - 25
 draw(p1x, p1y)
 ```
 
@@ -94,6 +117,9 @@ in a more plausible rendering of Hobbes.
 2.   Let's take a look at the second example:
 
 ```{r}
+p2x[p2x > 40 & p2y > 50] <- p2x[p2x > 40 & p2y > 50] + 13
+
+
 draw(p2x, p2y)
 ```
 
@@ -105,6 +131,9 @@ apart both horizontally and vertically).
 3.   Let's take a look at the third example:
 
 ```{r}
+subtract <- rep(c(5, 0), length.out = length(p3x))
+p3x <- p3x - subtract
+p3y <- p3y - subtract
 draw(p3x, p3y)
 ```
 
