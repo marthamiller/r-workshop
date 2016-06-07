@@ -107,8 +107,8 @@ new.p3x <- p3x
 new.p3y <- p3y
 
 
-new.p3x[p3x < 40 & p3y < 40 ] <- p3y[p3y < 40 & p3x < 40]
-new.p3y[p3y < 40 & p3x < 40] <- p3x[p3x < 40 & p3y < 40]
+new.p3x[p3x < 42 & p3y < 42 ] <- p3y[p3y < 42 & p3x < 42]
+new.p3y[p3y < 42 & p3x < 42] <- p3x[p3x < 42 & p3y < 42]
 
 draw(new.p3x, new.p3y)
 
