@@ -1,6 +1,6 @@
 ---
 title: "Vectors: practice II"
-author: "R Workshop"
+author: "Martha Miller"
 output:
   html_document:
     css: ../workshop.css
@@ -32,6 +32,12 @@ say you wanted to look through this list of cars and order them in a way in a wa
 that showcases which ones have the best `mpg`, then, the ones that have the 
 highest `hp`.  Using `order()`, rearrange this data frame such that it's ordered
 first by `mpg` (low to high) and then by `hp` (high to low).
+```{r}
+mpg.mtcars <- mtcars[order(mtcars$mpg), ]
+mpg.mtcars
+hp.mtcars<- mtcars[order(mtcars$hp, decreasing = TRUE),]
+hp.mtcars
+```
 
 * * *
 
@@ -57,26 +63,63 @@ If all goes well, a simple sketch of Calvin should appear.
 If you now draw the next set of vectors:
 
 ```{r}
-draw(p1x, p1y)
+sort.p1x <- sort(p1y)
+sort.p1y <- sort(p1y)
+draw(sort.p1x, sort.p1y) # returns a diagonal line
+draw(p1x < 75, p2y < 75) # does not work
 ```
 
 you will see Calvin and his mirror reflection, except that there is a problem with the data: some garbage points are mixed in with the correct data, resulting in a lot of spikes that reach reach between 75 and 100 in the y direction. Please fix this problem, so that drawing `p1x` with `p1y` results in a clean rendering of Calvin and his reflection.
 
 1.   
+```{r}
+sort.p1y <- p1y[sort(p1y)]
+sort.p1x <- p1x[sort(p1x)]
+sort.p1y[sort.p1y > 75]
+draw(sort.p1x[0:sort.p1x > 75], sort.p1y[0:sort.p2y > 75)
+```
 
 Let's take a look at the second example:
 
-```{r}
+```{r add 4th Hobbes to upper right corner}
+length(p2x)
+length(p2y)
+
+# reassign new variables to avoid re-loading data
+new.p2x <- p2x
+new.p2y - p2y
+
+# take subset with missing hobbes and replace with columns containing 2
+new.p2x[50:100]<- p2x[0:51]
+new.p2y[50:100]<- p2y[0:51]
+draw(new.p2y, new.p2x) # produces 2 hobbes re-oriented to face downward
+
+
+# try switching x and y
+new.p2x[50:100]<- p2y[0:51]
+new.p2y[50:100]<- p2y[0:51]
+draw(new.p2y, new.p2x) # produces 3 hobbes re-oriented to face downward
+
 draw(p2x, p2y)
+# instead of replace, try adding values
+new.p2y<- p2x[0:50] +50
+draw(new.p2x, p2y) # No go
+
+new.p2x[50:100] <- new.p2x[]
 ```
 
 here, we almost have four duplicates of Hobbes in a square configuration, but the upper right drawing is missing. Please duplicate one of the drawings of Hobbes, and place it in the upper right corner (by modifying the `p2x` and `p2y` vectors, that is).
 
 1.   
+```{r }
+p2x[50:length(p2x)]<- p2x[0:50]
+draw(new.p2x, p2y)
+```
 
 Let's take a look at the third example:
 
 ```{r}
+
 draw(p3x, p3y)
 ```
 
