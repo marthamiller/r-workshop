@@ -1,0 +1,243 @@
+---
+title: "Global Temperature Analysis 1881 - 2012"
+output: html_document
+author: Em Beauchamp and Martha Miller
+---
+
+```{r setup/read in data, include=FALSE}
+
+require(knitr)
+opts_chunk$set(echo = FALSE, tidy = FALSE)
+
+load(url('http://www.stolaf.edu/people/olaf/cs125/project1.RData'))
+
+
+
+
+```
+
+```{r excercise 1}
+
+absolute_farhenheit <- function(scaled_celsius){
+  descaled_celsius <- scaled_celsius / 100
+  celsius <- descaled_celsius + 14
+  farhenheit <- celsius *1.8 + 32
+  return (farhenheit)
+}
+
+temperatures_abs_farhenheit<- sapply(tData, absolute_farhenheit)
+
+```
+The average global temperature from January 1881 through  December 2012 is `r (mean(temperatures_abs_farhenheit))`. According to the [national climate data center](https://www.ncdc.noaa.gov/sotc/global/201213), in 2012 the average global temperature was 58.03 and in 1880 the average global temperature was 56.5, so this number seems reasonable. 
+```{r excercise2}
+get_month <- function(starting_vector, month_number = 1, num_years){
+  return_vector <- rep(NA, num_years)
+  for(i in 1:num_years){
+    return_vector[i] <- starting_vector[month_number]
+    month_number <- month_number + 12
+  }
+  
+  return(return_vector)
+  
+}
+
+get_year_min_max <- function(month_vector, minimum = TRUE){
+  if(minimum){
+  month_index <-which.min(month_vector)
+  }
+  
+  else{
+    month_index <-which.max(month_vector)
+  }
+  
+  return(month_index + 1881)
+}
+
+
+june_vector <- get_month(temperatures_abs_farhenheit, 6, 132)
+july_vector <- get_month(temperatures_abs_farhenheit, 7, 132)
+august_vector <- get_month(temperatures_abs_farhenheit, 8, 132)
+
+june_mean <- mean(june_vector)
+july_mean <- mean(july_vector)
+august_mean <- mean(august_vector)
+
+june_min <- min(june_vector)
+july_min <- min(june_vector)
+august_min <- min(june_vector)
+
+june_max <- max(june_vector)
+july_max <- max(july_vector)
+august_max <- max(august_vector)
+
+
+
+
+
+```
+## Global Summer Temperatures 1881 - 2012 (Deg.F)
+
+Month|Average|Minimum|Maximum
+-----|-------|-------|-------
+June |`r june_mean`|`r june_min`|`r june_max`
+July |`r july_mean`|`r july_min`|`r july_max`
+August |`r august_mean`|`r august_min`|`r august_max`
+
+The hottest years for June, July, and August were `r get_year_min_max(june_vector, minimum = FALSE)`,  `r get_year_min_max(july_vector, minimum = FALSE)`, and `r get_year_min_max(august_vector, minimum = FALSE)` respectively.The coldest were `r get_year_min_max(june_vector, minimum = TRUE)`, `r get_year_min_max(july_vector, minimum = TRUE)`, and `r get_year_min_max(august_vector, minimum = TRUE)`. It appears that the higher temperatures are generally occurring in more recent years.  
+More evidence of this warming trend can be seen in the next section.
+```{r excercise 3}
+
+get_month_year_index<- function(month, year){
+ return(((year - 1881) * 12) + month)
+}
+
+get_month_year <- function(temp_vector, index) {
+  month_number <- (index %% 12)
+  if (month_number == 0) {
+    month_number <- 12
+  }
+  year_index <- ((index - month_number)/ 12) + 1881
+  month_and_year <- c(month_number, year_index)
+  return(month_and_year)
+}
+ 
+plot_month<- function(month){
+month_names <- c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+x_axis <- rep(NA, 1584)
+for(i in seq(month, 1584, 12)){
+  month_year <- get_month_year(temperatures_abs_farhenheit, i)
+  year <- month_year[2]
+  x_axis[i] <- year
+  x_axis <- x_axis[!is.na(x_axis)]
+}
+y_axis <- get_month(temperatures_abs_farhenheit, month, 132)
+plot(x_axis, y_axis, xlab = "Year", ylab = "Temperature, F", main = month_names[month], pch = 20, col = "grey")
+}
+
+
+```
+
+## Average Temperatures By Month
+```{r plot temperatures}
+par(mfrow = c(1,3))
+for(i in 1:12){
+  plot_month(i)
+}
+```
+  
+  As seen in the plots, every month shows temperature increasing with year. Regardless of season, over the years temperature has increased.
+
+```{r excercise 5}
+
+annual_averages <- rep(NA, 1584)
+for(i in seq(12, 1584, 12)){
+  year_avg <- mean(temperatures_abs_farhenheit[i-11:i])
+  annual_averages[i]<- year_avg
+  
+  
+}
+
+annual_averages<-annual_averages[!is.na(annual_averages)]
+year_range <- 1881:2012
+
+par(mfrow = c(1,1))
+color_scheme <- ifelse(annual_averages == max(annual_averages), "red",ifelse(annual_averages == min(annual_averages), "blue", "grey"))
+
+plot(year_range, annual_averages, xlab = "Year", ylab = "Average Temperature, F", main = "Annual Averages 1881:2012", col = color_scheme, pch = 20)
+
+
+nice_min <-signif(min(annual_averages), digits = 4)
+nice_min_year <- year_range[which.min(annual_averages)]
+nice_max <- signif(max(annual_averages), digits = 4)
+nice_max_year <- year_range[which.max(annual_averages)]
+
+
+legend_text <- c(paste("Low:", nice_min, "Year:", nice_min_year), paste("High", nice_max, "Year:",  nice_max_year))
+legend_color <- c("blue","red")
+legend_pch <- c(20,  20)
+
+legend(x = "bottomright", legend = legend_text, pch = legend_pch, col = legend_color)
+
+
+```
+  
+From 1881 to 1919 the annual average temperature was generally decreasing. In 1919 it hit the lowest annual average temperature so far of `r nice_min`. After that it has been steadily increasing until 2012 when it hits the highest temperature so far, `r nice_max`.  
+
+
+```{r functions to se up 6-9}
+
+plot_avg_monthly <- function (temp_vector, start_year, start_month_num, end_year, end_month_num) {
+  
+  # need indices of start month/year and end month/year
+  start <- get_month_year_index(start_month_num, start_year)
+  end <- get_month_year_index(end_month_num, end_year)
+  
+  # setting up plot
+  x_axis <- temp_vector[start:end]
+  y_axis <- seq(start_year, end_year, length.out = (end-start+1))
+  plot(y_axis, x_axis, pch = 20, col = "grey", xlab = "Year", ylim = c(55,60), ylab = "Average Temperature", main = paste(start_month_num, "/", start_year, ":", end_month_num, "/", end_year))
+}
+
+
+stats_for_month <- function (temp_vector, start_year, start_month_num, end_year, end_month_num) {
+  
+  # need indices of start month/year and end month/year
+  start <- get_month_year_index(start_month_num, start_year)
+  end <- get_month_year_index(end_month_num, end_year)
+  
+  month_names <- c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+  working_temp_vector <- temp_vector[start:end]
+  
+  average_of_period <- mean(temp_vector[start:end])
+  min_of_period_temp <- min(temp_vector[start:end])
+  max_of_period_temp <- max(temp_vector[start:end])
+  min_of_period_index <- which.min(temp_vector[start:end])
+  max_of_period_index <- which.max(temp_vector[start:end])
+ # min_year_index <- 
+  #max_year_index <- 
+  min_of_period_month <- month_names[get_month_year(working_temp_vector, min_of_period_index)[1]]
+  min_of_period_year <- get_month_year(working_temp_vector, min_of_period_index)[2]
+  max_of_period_month <- month_names[get_month_year(working_temp_vector, max_of_period_index)[1]]
+  max_of_period_year <- get_month_year(working_temp_vector, max_of_period_index)[2]
+  print(paste("Average of period:", average_of_period ))
+  print(paste ("Minimum of period:", min_of_period_month, min_of_period_year,min_of_period_temp ))
+  print(paste("Maximum of period:", max_of_period_month, max_of_period_year,  max_of_period_temp))
+}
+
+
+```
+
+
+## Average Monthly Temperatures By Decades
+
+Over 100 years ago, temperatures were relatively stable.
+
+```{r Ex. 8}
+plot_avg_monthly(temperatures_abs_farhenheit, 1890, 1, 1899, 12)
+
+```
+  
+In the 1990s, a warming trend emerges. The difference in plots show a rise in average temperatures. While the increase is slight, you can see that overall the temperatures are higher in this plot than the previous time period.
+```{r Ex. 7}
+
+plot_avg_monthly(temperatures_abs_farhenheit, 1990, 1, 1999, 12)
+```
+  
+Recent years indicate a continuing warming trend. An inspection of average monthly temperatures between 2000 and 2012 indicates global temperatures which are notably higher than temperatures at the end of the 19th century, and which are steadily increasing.
+```{r Ex. 6}
+
+plot_avg_monthly(temperatures_abs_farhenheit, 2000, 1, 2012, 12)
+```
+  
+Increasing global temperatures can be seen clearly below. From 1881 to 1926 temperatures were relatively stable. From 1926 on,  an temperature increase trend can be seen. This trend becomes stronger as time moves closer to the current.
+
+## History of Average Monthly Temperatures : Three Eras
+
+```{r  Ex 9}
+  par(mfrow = c(1, 3))
+  plot_avg_monthly(temperatures_abs_farhenheit, 1881, 1, 1925, 12)
+  plot_avg_monthly(temperatures_abs_farhenheit, 1926, 1, 1970, 12)
+  plot_avg_monthly(temperatures_abs_farhenheit, 1971, 1, 2012, 12)
+
+```
+

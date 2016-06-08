@@ -1,4 +1,4 @@
-
+# RunTime Testing =====================================================
 microbenchmark( {
 total_population <- c()
 for(i in 1:nrow(state.x77)) {
@@ -48,5 +48,12 @@ microbenchmark({
   output[x >= 0] <- "Positive"
   output[x < 0] <- "Not Positive"
 })
-
-
+# Practicing Loops ==========================================
+x<- 0
+while (x < 7) {
+  x <- x + 1
+  if (x %% 2 == 0){
+    next
+  }
+  print(x)
+}
