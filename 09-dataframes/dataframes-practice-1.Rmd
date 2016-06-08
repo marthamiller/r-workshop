@@ -1,6 +1,6 @@
 ---
 title: "Dataframes: Practice"
-author: "R Workshop"
+author: "Martha Miller"
 output:
   html_document:
     css: ../workshop.css
@@ -21,10 +21,38 @@ data(quakes)
 ```
 
 1.   How would you find information about this data frame? How many rows and columns does it have?
+```{r}
+dim(quakes)
+str(quakes)
+```
+
 1.   Based purely on the description of the columns (found with `?quakes`), would you expect a relationship between the 4th and 5th columns? Why or why not?
+
+Columns "mag" and "stations" provide information about the Richter Magnitude and Number of stations reporting. I don't know much about earthquakes but I would expect the potential relationship to reflect that maybe there are more stations near earthquake 'hotspots;' in other words, I think there might be a positive relationship.
+
 1.   Show a command you could use to find the average (mean) magnitude of all earthquakes that occurred below the median depth of all earthquakes.
+
+```{r}
+mean(quakes$mag[quakes$depth < median(quakes$depth)], na.rm =TRUE)
+```
+
+
 1.   How does the average magnitude of these "deep" earthquakes compare to the magnitude of "shallow" (above median depth) earthquakes?
+
+```{r}
+mean(quakes$mag[quakes$depth > median(quakes$depth)], na.rm =TRUE)
+```
+Deep earthquakes, on average, have a larger magnitude than shallow earthquakes.
+
+
 1.   Show the command you would use to get the row(s) with the smallest value in the `depth` column.
+
+```{r}
+which.min(quakes$depth)
+
+#check stats for column
+summary(quakes$depth)
+```
 
 
 
