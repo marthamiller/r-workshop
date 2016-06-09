@@ -1,0 +1,79 @@
+---
+title: "Stringr"
+author: Em Beauchamp, Some material adapated from stringr vignette
+output: 
+  ioslides_presentation:
+      incremental: true
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(stringr)
+library(dplyr)
+```
+## Background Information {.build}
+
+- Written to fill in the gap between other languages' (i.e. Python) string capability and R. 
+- Wrapper to Stringi
+- Acts as an interface to other languages
+- Consistent Syntax
+- 
+
+
+## Usefulness of String Manipulations in R {.build}
+```{r, echo = TRUE}
+human_1 <-"A human would recognize this as the same sentence"
+human_2 <- "A HUMAN WOULD RECOGNIZE THIS AS THE SAME SENTENCE"
+
+
+human_1 == human_2
+
+str_to_lower(human_1) == str_to_lower(human_2)
+```
+
+## Basic String Operations {.build}
+```{r, echo = TRUE}
+some_text_vector <- c("Red", "BLUE", "orange", "Purple")
+
+some_text_vector
+
+some_text_vector <- str_to_title(some_text_vector)
+
+some_text_vector
+```
+Also: str_pad, str_join, str_trim, etc.
+
+## String Replacement Operations {.build}
+
+- Stringr also handles string matching and regular expression matching
+- Perhaps a useful tool : http://regexr.com/
+```{r echo = TRUE}
+text_input_vector <- c(">Some", ">Words")
+text_input_vector
+```
+
+```{r echo = TRUE}
+
+text_input_vector_clean <- str_replace(text_input_vector, ">", "")
+text_input_vector_clean
+
+```
+
+## Plays Well With The Pipe!! {.build}
+```{r echo = TRUE}
+text_input_vector %>%
+  str_replace(">", "") %>%
+  str_to_lower()
+
+```
+
+## More Complex Example {.build}
+https://cran.r-project.org/web/packages/stringr/vignettes/stringr.html
+
+
+
+
+
+
+
