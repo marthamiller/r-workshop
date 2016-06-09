@@ -18,6 +18,40 @@ haven't seen!) to reveal an interesting relationship.
 - `geom_histogram`
 - `geom_density`
 - `geom_boxplot`
+```{r plot practice using infert data}
+library(datasets)
+library(ggplot2)
+summary(WorldPhones)
+library(dplyr)
+library(tidyr)
+rownames(WorldPhones)
+WorldPhones <- data.frame(WorldPhones)
+class(WorldPhones)
+colnames(WorldPhones)
+
+WorldPhones
+WorldPhones$Year <- rownames(WorldPhones)
+ds <- WorldPhones %>%
+  gather(continent, num_phones, N.Amer:Mid.Amer) %>%
+  arrange(Year, continent, num_phones) 
+  
+ggplot(ds, aes(x = Year, y = num_phones, colour = continent)) +
+  geom_histogram(bin_size = 2) +
+  facet_wrap(~ continent, scales = "free_y")  
+  geom_histogram(binwidth = 3) 
+
+geom_line()
+
+ds    
+
+ggplot(data = WorldPhones, mapping = aes(y = , x = education, colour = continent)) +
+  geom_point()
+  #geom_point(size = 3) +
+  geom_line() +
+  facet_wrap( ~ Type, scales = "free_y")
+  
+```
+
 
 You will be presenting one of these plots to the group.
 
@@ -34,12 +68,41 @@ to exclude the edge cases from your analysis, so focus on the
 planes that have logged more than 20 flights and flown an average
 distance of less than 2000 miles.
 
+
+
+```{r}
+library(pnwflights14)
+str(flights)
+```
+
+```{r plotting planes by arrival delay and average distance flown}
+flights %>%
+  group_by(tailnum) %>%
+  summarize(count = n(), avg_distance = mean(distance), 
+            delay = mean(arr_delay)) %>% 
+  filter(count > 20, avg_distance < 2000) %>%
+  ggplot(aes(y = delay, x = avg_distance, size = count)) +
+    geom_smooth() +
+    geom_point(alpha = .5) +
+  ggtitle("Average Arrival Delays and Distance of Flights by Plane")
+
+  
+```
 <center>
 <img src="ggplot.png" width = 500>
 </center>
-
 1. There are two plots that show up 
 in the `dplyr` slides. How could these be improved to make them easier to read/interpret? Please implement these improvements.
+
+```{r dplyr plots}
+flights %>%
+  group_by(carrier) %>%
+  summarize(avg_delay = mean(dep_delay, na.rm = TRUE)) %>%
+  arrange(desc(avg_delay)) %>%
+  ggplot(aes(x = carrier, y = delay, colour = )) +
+  geom_point()
+```
+
 
 * * *
 
@@ -48,4 +111,8 @@ in the `dplyr` slides. How could these be improved to make them easier to read/i
 Rebuild the plots that you generated according to exercises 4 and 9 using
 the dataframe you previously contructed, `dplyr`, and `ggplot2`. Recycle dataframes
 and plots whereever you can.
+```{r global warming}
+
+```
+
 
